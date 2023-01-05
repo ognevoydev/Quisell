@@ -1,7 +1,7 @@
 database:
   name: quisell
-  username: ${DB_USERNAME}
-  password: ${DB_PASSWORD}
+  username:
+  password:
   host:
   port: 5432
 

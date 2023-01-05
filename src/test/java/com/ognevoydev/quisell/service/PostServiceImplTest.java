@@ -2,6 +2,7 @@ package com.ognevoydev.quisell.service;
 
 import com.ognevoydev.quisell.common.exception.HttpStatusException;
 import com.ognevoydev.quisell.model.Post;
+import com.ognevoydev.quisell.model.PostUpdateDTO;
 import com.ognevoydev.quisell.repository.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,25 @@ class PostServiceImplTest {
         assertTrue(postService.isPostOwner(post.getId(), post.getAccountId()));
         assertFalse(postService.isPostOwner(post.getId(), UUID.randomUUID()));
         assertThrows(HttpStatusException.class, () -> postService.isPostOwner(UUID.randomUUID(), post.getAccountId()));
+    }
+
+    @Test
+    void updatePostById() {
+        Post post = new Post();
+        post.setTitle("Foo");
+        post.setDescription("Foo");
+        post.setUsed(false);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("Foo DTO", "Foo DTO", 200, true);
+
+        postService.savePost(post);
+
+        assertThrows(HttpStatusException.class, () -> postService.updatePostById(UUID.randomUUID(), postUpdateDTO));
+
+        postService.updatePostById(post.getId(), postUpdateDTO);
+
+        assertEquals(postService.getPostById(post.getId()).getTitle(), postUpdateDTO.title());
+        assertEquals(postService.getPostById(post.getId()).getDescription(), postUpdateDTO.description());
+        assertEquals(postService.getPostById(post.getId()).getPrice(), postUpdateDTO.price());
+        assertEquals(postService.getPostById(post.getId()).getUsed(), postUpdateDTO.used());
     }
 }
