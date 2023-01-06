@@ -2,7 +2,7 @@ package com.ognevoydev.quisell.controller;
 
 import com.ognevoydev.quisell.common.exception.HttpStatusException;
 import com.ognevoydev.quisell.model.Post;
-import com.ognevoydev.quisell.model.PostUpdateDTO;
+import com.ognevoydev.quisell.model.PostDTO;
 import com.ognevoydev.quisell.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -48,14 +48,9 @@ public class PostController {
 
     @PutMapping("/{id}")
     public void updatePost(@PathVariable(value = "id") UUID postId,
-                           @RequestBody PostUpdateDTO post,
+                           @RequestBody PostDTO post,
                            Principal principal) {
-        if(postService.isPostOwner(postId, UUID.fromString(String.valueOf(principal)))) {
-            postService.updatePostById(postId, post);
-        }
-        else {
-            throw new HttpStatusException("Access to this resource on the server is denied", FORBIDDEN);
-        }
+        postService.updatePostById(postId, post);
     }
 
 }

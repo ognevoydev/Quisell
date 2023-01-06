@@ -2,10 +2,11 @@ package com.ognevoydev.quisell.service;
 
 import com.ognevoydev.quisell.common.exception.NotFoundException;
 import com.ognevoydev.quisell.model.Post;
-import com.ognevoydev.quisell.model.PostMapper;
-import com.ognevoydev.quisell.model.PostUpdateDTO;
+import com.ognevoydev.quisell.model.PostDTO;
+import com.ognevoydev.quisell.model.mapper.PostMapper;
 import com.ognevoydev.quisell.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +17,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class PostServiceImpl implements PostService{
-
-    private final PostMapper postMapper;
 
     private final PostRepository postRepository;
 
@@ -56,9 +55,9 @@ public class PostServiceImpl implements PostService{
 
     @Transactional
     @Override
-    public void updatePostById(UUID postId, PostUpdateDTO post) {
+    public void updatePostById(UUID postId, PostDTO post) {
         Post existingPost = getPostById(postId);
-        Post updatedPost = postMapper.postUpdateDTOtoPost(post);
+        Post updatedPost = Mappers.getMapper(PostMapper.class).postDTOtoPost(post);
 
         existingPost.setTitle(updatedPost.getTitle());
         existingPost.setDescription(updatedPost.getDescription());
