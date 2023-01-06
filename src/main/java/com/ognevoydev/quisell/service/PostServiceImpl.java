@@ -2,8 +2,11 @@ package com.ognevoydev.quisell.service;
 
 import com.ognevoydev.quisell.common.exception.NotFoundException;
 import com.ognevoydev.quisell.model.Post;
+import com.ognevoydev.quisell.model.PostDTO;
+import com.ognevoydev.quisell.model.mapper.PostMapper;
 import com.ognevoydev.quisell.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +39,13 @@ public class PostServiceImpl implements PostService{
         postRepository.save(post);
     }
 
+    @Override
+    public boolean isPostOwner(UUID postId, UUID accountId) {
+        return postRepository.isPostOwner(postId, accountId).orElseThrow(
+                () -> new NotFoundException(postId, Post.class)
+        );
+    }
+
     @Transactional
     @Override
     public void deletePostById(UUID postId) {
@@ -43,12 +53,18 @@ public class PostServiceImpl implements PostService{
             throw new NotFoundException(postId, Post.class);
     }
 
+    @Transactional
     @Override
-    public boolean isPostOwner(UUID postId, UUID accountId) {
-        return postRepository.isPostOwner(postId, accountId).orElseThrow(
-                () -> new NotFoundException(postId, Post.class)
-        );
+    public void updatePostById(UUID postId, PostDTO post) {
+        Post existingPost = getPostById(postId);
+        Post updatedPost = Mappers.getMapper(PostMapper.class).postDTOtoPost(post);
 
+        existingPost.setTitle(updatedPost.getTitle());
+        existingPost.setDescription(updatedPost.getDescription());
+        existingPost.setPrice(updatedPost.getPrice());
+        existingPost.setUsed(updatedPost.getUsed());
+
+        postRepository.save(existingPost);
     }
 
 }
