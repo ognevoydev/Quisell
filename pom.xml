@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<postgresql.version>42.5.1</postgresql.version>
+		<springdoc.version>2.0.2</springdoc.version>
 	</properties>
 	<dependencies>
 
@@ -52,6 +53,14 @@
 		<dependency>
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
+		</dependency>
+
+		<!-- Springdoc -->
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${springdoc.version}</version>
 		</dependency>
 
 		<!-- Tests -->
